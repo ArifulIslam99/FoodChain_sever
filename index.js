@@ -86,10 +86,11 @@ async function run() {
       const price = req.body.price;
       const unit = req.body.unit;
       const status = req.body.status;
+      const contractAddress = req.body.contractAddress;
 
       const data = { name: name, description: description, price: price, unit: unit,
-        logisticRequest: [], retailerRequest: [], 
-        status: status, seller: req.body.email, img: image }
+        logisticAdress: null, retailerAdress: null, 
+        status: status, contractAddress: contractAddress , seller: req.body.email, img: image }
 
       const result = await products.insertOne(data);
       res.json(result)
@@ -162,11 +163,34 @@ async function run() {
       app.put("/product/addlogistic/:id", async(req, res)=>{
         const id = req.params;
         const filter = { _id : ObjectId(id)};
-        const email= req.body.email;
-        const updateDoc = { $set : { logisticRequest: email}}
+        const logisticAdress = req.body.logisticAdress;
+        const updateDoc = { $set : { logisticAdress: logisticAdress}}
         const result = await products.updateOne(filter, updateDoc)
         res.json(result)
       })
+      // Handle Retailer Request
+
+      app.put("/product/addRetailer/:id", async(req, res)=>{
+        const id = req.params;
+        const filter = { _id : ObjectId(id)};
+        const retailerAdress = req.body.retailerAdress;
+        const updateDoc = { $set : { retailerAdress: retailerAdress}}
+        const result = await products.updateOne(filter, updateDoc)
+        res.json(result)
+      })
+      // uPDATE Sold Status
+
+      app.put("/product/sold/:id", async(req, res)=>{
+        const id = req.params;
+        const filter = { _id : ObjectId(id)};
+        
+        const updateDoc = { $set : { sell_status: "sold"}};
+        const result = await products.updateOne(filter, updateDoc)
+        res.json(result)
+      })
+
+
+
   }
   finally {
 
